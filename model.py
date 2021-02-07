@@ -93,9 +93,9 @@ def create_model_cnn(input_shape, dim_y, dim_h, hiddens, path, optimizer):
         elif dropout > 0.0:
             model.add(layers.Dropout(dropout))
         
-    model.add(layers.Dense(dim_y, name='output'))
+    model.add(layers.Dense(dim_y, activation='sigmoid', name='output'))
     #compile
-    model.compile(optimizer=optimizer, loss='mse', metrics=['accuracy'])
+    model.compile(optimizer=optimizer, loss='mse') #, metrics=['accuracy'])
     #summary
     model.summary()
     return model
@@ -130,9 +130,9 @@ def fit(model, _x, _y, epochs, path, x_test, y_test):
     #fit
     if(len(x_test) > 0):
         test_x, test_y = randomize2(x_test, y_test, ten)
-        model.fit(_x, _y, batch_size=None, epochs=epochs, callbacks=[tb_hist, chk], validation_data=(test_x, test_y), shuffle=True)
+        model.fit(_x, _y, batch_size=None, epochs=epochs, validation_data=(test_x, test_y), shuffle=True)
     else:
-        model.fit(_x, _y, batch_size=None, epochs=epochs, callbacks=[tb_hist, chk], shuffle=True)
+        model.fit(_x, _y, batch_size=None, epochs=epochs, shuffle=True)
     #save
     model.save(path)
     print('save model', path)
